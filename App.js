@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import * as Notifications from "expo-notifications";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /* manipulador de eventos de notificação */
 Notifications.setNotificationHandler({
@@ -21,6 +21,8 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+  const [dados, setDados] = useState(null);
+
   useEffect(() => {
     /* ouvinte de evento para as notificações recebidas */
     Notifications.addNotificationReceivedListener((notificacao) => {
@@ -42,6 +44,7 @@ export default function App() {
     /* ouvinte de evento para as respostas dadas as notificações, ou seja, quando o usuario toca/interage na notificação */
     Notifications.addNotificationResponseReceivedListener((resposta) => {
       console.log(resposta.notification.request.content.data);
+      setDados(resposta.notification.request.content.data);
     });
   }, []);
 
@@ -64,8 +67,15 @@ export default function App() {
     <>
       <StatusBar />
       <SafeAreaView style={styles.container}>
-        <Text>Exemplo de sistemas de notificação</Text>
+        <Text>Exemplo de sistemas de notificação local</Text>
         <Button onPress={enviarMensagem} title="Disparar notificação" />
+
+        {dados && (
+          <View style={styles.conteudo}>
+            <Text> {dados.usuario} </Text>
+            <Text> {dados.cidade} </Text>
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
