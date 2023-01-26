@@ -23,6 +23,17 @@ Notifications.setNotificationHandler({
 export default function App() {
   const [dados, setDados] = useState(null);
 
+  /* obter as permissoes atuais do dispositivo */
+
+  Notifications.getPermissionsAsync().then((status) => {
+    if (status.granted) {
+      /* permissões ok? então vamos obter o token expo do aparelho */
+      Notifications.getExpoPushTokenAsync().then((token) => {
+        console.log(token);
+      });
+    }
+  });
+
   useEffect(() => {
     /* ouvinte de evento para as notificações recebidas */
     Notifications.addNotificationReceivedListener((notificacao) => {
